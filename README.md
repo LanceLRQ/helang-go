@@ -5,7 +5,7 @@ Next-Generation Cyber Programming Language from Li Tang, with golang support.
 
 次世代赛博编程语言，诞生于E-SMOKER之乡：赛博理塘。
 
-本项目是由自己会打字的5G键盘，操作浏览器并搜索发现了 `https://github.com/kifuan/helang` 项目后，模仿着该项目的源代码，在AirDesk上配合AirPods编写的。
+本项目是由自己会打字的5G键盘，在上班摸鱼期间，搜索并发现了 `https://github.com/kifuan/helang` 项目后，模仿着该项目的源代码，在AirDesk上配合AirPods编写的。
 
 5G键盘发现，原项目运行程序的体验并不太好。毕竟，写好了一段代码，发给你亲爱的朋友们，他们却要抱怨需要安装Python环境。于是自作主张，增加了把它编译成可执行文件的功能！
 
