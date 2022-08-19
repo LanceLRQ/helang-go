@@ -2,6 +2,7 @@ package helang
 
 import (
 	"fmt"
+	"helang-go/helang/core"
 	"regexp"
 )
 
@@ -13,7 +14,7 @@ const (
 	LexerStateComment
 )
 
-type TokensList []*TokenStruct
+type TokensList []*core.TokenStruct
 
 type Lexer struct {
 	content []byte
@@ -119,10 +120,10 @@ func (lexer *Lexer) wait() error {
 		return nil
 	}
 
-	for char, kind := range CharTokenKinds {
+	for char, kind := range core.CharTokenKinds {
 		if lexer.cur == char {
 			// Matched single char token, adding it to the list.
-			lexer.tokens = append(lexer.tokens, NewToken(string(lexer.cur), kind))
+			lexer.tokens = append(lexer.tokens, core.NewToken(string(lexer.cur), kind))
 			lexer.nextChar()
 			return nil
 		}
@@ -134,13 +135,13 @@ func (lexer *Lexer) ident() {
 	matched, _ := regexp.Match("[A-Za-z0-9_$]", []byte{lexer.cur})
 	if lexer.cache != "" && !matched {
 		// Current character is not identifier, changing state to WAIT.
-		kind, ok := KeywordKinds[lexer.cache]
+		kind, ok := core.KeywordKinds[lexer.cache]
 		if !ok {
-			kind = TokenKindIdent
-			lexer.tokens = append(lexer.tokens, NewToken(lexer.cache, kind))
-			lexer.state = LexerStateWait
-			return
+			kind = core.TokenKindIdent
 		}
+		lexer.tokens = append(lexer.tokens, core.NewToken(lexer.cache, kind))
+		lexer.state = LexerStateWait
+		return
 	}
 	lexer.cache += string(lexer.cur)
 	lexer.nextChar()
@@ -152,7 +153,7 @@ func (lexer *Lexer) number() {
 	matched, _ := regexp.Match("\\d", []byte{lexer.cur})
 	if !matched {
 		// Current character is not number, changing state to WAIT.
-		lexer.tokens = append(lexer.tokens, NewToken(lexer.cache, TokenKindNumber))
+		lexer.tokens = append(lexer.tokens, core.NewToken(lexer.cache, core.TokenKindNumber))
 		lexer.state = LexerStateWait
 		return
 	}
@@ -168,7 +169,7 @@ func (lexer *Lexer) increment() error {
 	}
 	if lexer.cache == "++" {
 		// Enough + operator, changing state to WAIT.
-		lexer.tokens = append(lexer.tokens, NewToken(lexer.cache, TokenKindIncrement))
+		lexer.tokens = append(lexer.tokens, core.NewToken(lexer.cache, core.TokenKindIncrement))
 		lexer.state = LexerStateWait
 		return nil
 	}

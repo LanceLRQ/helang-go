@@ -5,5 +5,5 @@ import (
 )
 
 type BasicAST interface {
-	evaluate(map[string]*core.U8) (*core.U8, error)
+	Evaluate(map[string]*core.U8) (*core.U8, error)
 }

@@ -1,4 +1,6 @@
-package helang
+package core
+
+import "fmt"
 
 const (
 	TokenKindNumber = iota
@@ -40,11 +42,11 @@ var CharTokenKinds = map[byte]int {
 }
 
 var KeywordKinds = map[string]int {
-	"print": TokenKindPrint,
-	"u8": TokenKindU8,
-	"test5g": TokenKindTest5g,
+	"print":       TokenKindPrint,
+	"u8":          TokenKindU8,
+	"test5g":      TokenKindTest5g,
 	"cyberspaces": TokenKindCyberspaces,
-	"sprint": TokenKindSprint,
+	"sprint":      TokenKindSprint,
 }
 
 type TokenStruct struct {
@@ -58,6 +60,10 @@ func NewToken(content string, kind int) *TokenStruct {
 	}
 }
 
-func (token *TokenStruct) Compare (other *TokenStruct) bool {
+func (token *TokenStruct) Equal (other *TokenStruct) bool {
 	return token.Content == other.Content && token.Kind == other.Kind
+}
+
+func (token *TokenStruct) ToString () string {
+	return fmt.Sprintf("Token<%s,%d>", token.Content, token.Kind)
 }
