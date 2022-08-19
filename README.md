@@ -51,6 +51,9 @@ windows下为：（我没测过啊，正经赛博人谁用windows啊，不都是
 ./great.exe
 ```
 
+<h3 style="color: red">你可以将这个程序轻易复制给有需要的朋友！他们可以直接运行，并不需要装环境！</h3>
+<h3 style="color: red">很酷，很符合我对未来生活的想象！</h3>
+
 ## 语法
 
 语法参见原作 [kifuan/helang](https://github.com/kifuan/helang)
