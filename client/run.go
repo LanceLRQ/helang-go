@@ -2,19 +2,25 @@ package client
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"helang-go/helang"
 	"helang-go/helang/core"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 )
 
 const helpText = `:help  Print this help message
 :exit  Exit the shell
 :env   Print current environments`
+
+var exitKeyPressTimes = 0
 
 func runCodes(ctx *cli.Context) error {
 	file := ctx.Args().Get(0)
@@ -71,16 +77,46 @@ func shellKeywordProc(keyword string, env map[string]*core.U8, arguments... inte
 	}
 }
 
+func exitHandler(exitChan chan os.Signal) {
+	for {
+		select {
+		case _ = <-exitChan:
+			exitKeyPressTimes++
+			if exitKeyPressTimes > 1 {
+				fmt.Println("")
+				os.Exit(0)
+			} else {
+				fmt.Print("\n(To exit, press ^C again or ^D or type :exit)\nSpeak to Saint He > ")
+			}
+		}
+	}
+
+}
+
 func runShell(ctx *cli.Context) error {
+
+	exitChan := make(chan os.Signal)
+	signal.Notify(exitChan, os.Interrupt, os.Kill, syscall.SIGTERM)
+	go exitHandler(exitChan)
+
 	env := map[string]*core.U8{}
 	reader := bufio.NewReader(os.Stdin)
+
 	for {
 		fmt.Print("Speak to Saint He > ")
 		cmdString, err := reader.ReadString('\n')
 		if err != nil {
-			_, _ = fmt.Fprintln(os.Stderr, err)
-			continue
+			if errors.Is(io.EOF, err) {
+				fmt.Println()
+				return nil
+			} else {
+				_, _ = fmt.Fprintln(os.Stderr, err)
+				continue
+			}
 		}
+
+		exitKeyPressTimes = 0
+
 		cmdString = strings.TrimSuffix(cmdString, "\n")
 		if cmdString == "" { continue }
 
