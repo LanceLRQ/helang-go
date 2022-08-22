@@ -22,7 +22,8 @@ Next-Generation Cyber Programming Language from Li Tang, with golang support.
 ## 使用方法
 
 0. 安装`golang`环境，建议`1.16及以上` 
-- [国内](https://studygolang.com/dl) https://studygolang.com/dl
+1. 
+- [国内镜像](https://golang.google.cn/dl/) https://golang.google.cn/dl/
 - [官网(需要梯子)](https://go.dev/dl/) https://go.dev/dl/
 
 1. 拉取源代码并安装一些依赖（测5G用的）
