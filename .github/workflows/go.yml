@@ -22,7 +22,7 @@ jobs:
         go get -v -t -d ./...
         
     - name: Build (linux_amd64)
-      run: GOOS=linux GOARCH=amd64 go build -o he ./helang.go -v
+      run: GOOS=linux GOARCH=amd64 go build -o he ./helang.go
 
     - name: Pack (linux_amd64)
       run: |
