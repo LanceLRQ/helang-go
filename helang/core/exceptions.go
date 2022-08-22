@@ -4,6 +4,8 @@ import "errors"
 
 var HeLangException = errors.New("HeLangException")
 
+var HeLangCompilerException = errors.New("HeLangCompilerException")
+
 var BadTokenException = errors.New("BadTokenException")
 
 var BadStatementException = errors.New("BadStatementException")

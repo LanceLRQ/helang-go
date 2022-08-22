@@ -1,24 +1,23 @@
-package tests
+package asts
 
 import (
 	assertProvider "github.com/stretchr/testify/assert"
-	"helang-go/helang/asts"
 	"helang-go/helang/core"
 	"testing"
 )
 
 type ListTestCase struct {
-	a *asts.VarExprAST
-	b *asts.VarExprAST
-	c *asts.VarExprAST
+	a *VarExprAST
+	b *VarExprAST
+	c *VarExprAST
 	env map[string]*core.U8
 }
 
 func NewListTestCase() ListTestCase {
 	return ListTestCase{
-		a: asts.NewVarExprAST("a"),
-		b: asts.NewVarExprAST("b"),
-		c: asts.NewVarExprAST("c"),
+		a: NewVarExprAST("a"),
+		b: NewVarExprAST("b"),
+		c: NewVarExprAST("c"),
 		env: map[string]*core.U8{
 			"a": core.NewU8Array([]int{ 1, 2, 3, 4 }),
 			"b": core.NewU8Array([]int{ 1, 3 }),
@@ -30,7 +29,7 @@ func NewListTestCase() ListTestCase {
 func TestListGet(t *testing.T) {
 	assert := assertProvider.New(t)
 	case1 := NewListTestCase()
-	ret, err := asts.NewU8GetAST(case1.a, case1.b).Evaluate(case1.env)
+	ret, err := NewU8GetAST(case1.a, case1.b).Evaluate(case1.env)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -41,7 +40,7 @@ func TestListGet(t *testing.T) {
 func TestListSet(t *testing.T) {
 	assert := assertProvider.New(t)
 	case1 := NewListTestCase()
-	_, err := asts.NewU8SetAST(case1.a, case1.b, case1.c).Evaluate(case1.env)
+	_, err := NewU8SetAST(case1.a, case1.b, case1.c).Evaluate(case1.env)
 	if err != nil {
 		t.Fatal(err)
 	}

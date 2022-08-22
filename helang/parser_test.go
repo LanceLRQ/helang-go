@@ -1,8 +1,7 @@
-package tests
+package helang
 
 import (
 	assertProvider "github.com/stretchr/testify/assert"
-	"helang-go/helang"
 	"helang-go/helang/core"
 	"log"
 	"testing"
@@ -15,7 +14,7 @@ func TestU8ParseDef(t *testing.T) {
         u8 list1 = 1 | 2 | 3;
         u8 list2 = [3];
 	`
-	env, _, err := helang.RunCodeWithoutEnv(code)
+	env, _, err := RunCodeWithoutEnv(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,7 +30,7 @@ func TestParseU8Set(t *testing.T) {
         a[1 | 3] = 12;
         b[0] = 10;
 	`
-	env, _, err := helang.RunCodeWithoutEnv(code)
+	env, _, err := RunCodeWithoutEnv(code)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,7 +47,7 @@ func TestParseU8Get(t *testing.T) {
 	code := `
         u8 b = a[1 | 3];
 	`
-	_, err := helang.RunCode(code, env)
+	_, err := RunCode(code, env)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +56,7 @@ func TestParseU8Get(t *testing.T) {
 
 func TestParseDecl(t *testing.T) {
 	assert := assertProvider.New(t)
-	env, _, err := helang.RunCodeWithoutEnv("u8 a;")
+	env, _, err := RunCodeWithoutEnv("u8 a;")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,7 +65,7 @@ func TestParseDecl(t *testing.T) {
 
 func TestParseVarAssign(t *testing.T) {
 	assert := assertProvider.New(t)
-	env, _, err := helang.RunCodeWithoutEnv(`
+	env, _, err := RunCodeWithoutEnv(`
 		u8 a = 1 | 2;
         a = 3 | 4;
 	`)
@@ -78,7 +77,7 @@ func TestParseVarAssign(t *testing.T) {
 
 func TestParseIncrement(t *testing.T) {
 	assert := assertProvider.New(t)
-	env, _, err := helang.RunCodeWithoutEnv(`
+	env, _, err := RunCodeWithoutEnv(`
 		u8 a = 1 | 2 | 3;
         a++;
 	`)
@@ -90,7 +89,7 @@ func TestParseIncrement(t *testing.T) {
 
 func TestParseSemicolon(t *testing.T) {
 	assert := assertProvider.New(t)
-	env, _, err := helang.RunCodeWithoutEnv(";;;u8 a = 1;;;")
+	env, _, err := RunCodeWithoutEnv(";;;u8 a = 1;;;")
 	if err != nil {
 		log.Fatal(err)
 	}

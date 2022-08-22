@@ -26,33 +26,42 @@ Next-Generation Cyber Programming Language from Li Tang, with golang support.
 - [国内镜像](https://golang.google.cn/dl/) https://golang.google.cn/dl/
 - [官网(需要梯子)](https://go.dev/dl/) https://go.dev/dl/
 
-1. 拉取源代码并安装一些依赖（测5G用的）
+1. 拉取源代码并安装一些依赖，然后编译 `he` 客户端(编译器)
 
 ```shell
 > git clone git@github.com:LanceLRQ/helang-go.git
 > cd helang-go
 > go get
+> go build -o he helang.go 
 ```
 
-2. 编译程序
+2. 使用 `he` 客户端
+
+直接运行代码：
 
 ```shell
-go run compiler.go great.he
+> ./he run great.he
 ```
 
-3. 执行编译
+编译并运行代码：
 
 ```shell
-./great
+> ./he build great.he
+> ./great
 ```
 
-windows下为：（我没测过啊，正经赛博人谁用windows啊，不都是用Mac吗？）
+- 你可以将编译结果复制给你的朋友！让他们也感受一下何圣的恩典吧！啊！这灼热的真理！
+
+3. REPL方式运行
 
 ```shell
-./great.exe
+> ./he shell
 ```
 
-<h3>你可以将这个程序轻易复制给有需要的朋友！他们可以直接运行，并不需要装环境！</h3>
+4. 思维拓展
+
+- 你可以想办法把它安装到 `/usr/local/bin` 下，这样就可以直接用 `he` 来运行编译了。简直和 `go` 差不多！
+
 <h3>很酷，很符合我对未来生活的想象！</h3>
 
 ## 单元测试
@@ -61,6 +70,8 @@ windows下为：（我没测过啊，正经赛博人谁用windows啊，不都是
 cd tests
 go test -v
 ```
+
+惊人的 100%™ 单元测试覆盖率🤩。
 
 ## 语法
 
