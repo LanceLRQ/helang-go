@@ -128,7 +128,7 @@ func (lexer *Lexer) wait() error {
 			return nil
 		}
 	}
-	return fmt.Errorf("bad token '%s' (line %d:%d)", string(lexer.cur), lexer.line, lexer.lineChar)
+	return fmt.Errorf("%w: '%s' (line %d:%d)", core.BadTokenException, string(lexer.cur), lexer.line, lexer.lineChar)
 }
 
 func (lexer *Lexer) ident() {
@@ -165,7 +165,7 @@ func (lexer *Lexer) number() {
 func (lexer *Lexer) increment() error {
 	// Not support for floats yet, as the King He hasn't written any floats.
 	if lexer.cache == "+" && lexer.cur != '+' {
-		return fmt.Errorf("only ++ operator is expected, as the King He has NOT written single + (line %d:%d)", lexer.line, lexer.lineChar)
+		return fmt.Errorf("%w: only ++ operator is expected, as the King He has NOT written single + (line %d:%d)", core.CyberGrammarException, lexer.line, lexer.lineChar)
 	}
 	if lexer.cache == "++" {
 		// Enough + operator, changing state to WAIT.
@@ -181,7 +181,7 @@ func (lexer *Lexer) increment() error {
 
 func (lexer *Lexer) comment() error {
 	if lexer.cache == "/" && lexer.cur != '/' {
-		return fmt.Errorf("bad token '%s' (line %d:%d)", string(lexer.cur), lexer.line, lexer.lineChar)
+		return fmt.Errorf("%w: '%s' (line %d:%d)", core.BadTokenException, string(lexer.cur), lexer.line, lexer.lineChar)
 	}
 	if lexer.cache == "//" {
 		if lexer.cur == '\n' {

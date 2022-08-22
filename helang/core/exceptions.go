@@ -12,7 +12,7 @@ var CyberNameException = errors.New("CyberNameException")
 
 var CyberSubtractionException = errors.New("CyberSubtractionException")
 
-var CyberU8ComparingException = errors.New("CyberU8ComparingException")
+var CyberGrammarException = errors.New("CyberLexerException")
 
 var CyberNotSupportedException = errors.New("CyberNotSupportedException")
 

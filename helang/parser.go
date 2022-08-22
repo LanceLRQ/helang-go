@@ -3,12 +3,12 @@ package helang
 import (
 	"errors"
 	"fmt"
+	"helang-go/helang/asts"
 	"helang-go/helang/core"
-	"helang-go/helang/he_ast"
 	"strconv"
 )
 
-type ParserFuncType func(*Parser, ...interface{}) (he_ast.BasicAST, error)
+type ParserFuncType func(*Parser, ...interface{}) (asts.BasicAST, error)
 
 type Parser struct {
 	tokens TokensList
@@ -36,7 +36,7 @@ var rootParsers = []ParserFuncType {
 	_rootParseCyberspaces,
 }
 
-func (parser *Parser) Parse() (he_ast.BasicAST, error) {
+func (parser *Parser) Parse() (asts.BasicAST, error) {
 	/*
 	 root
 	          : print
@@ -52,14 +52,14 @@ func (parser *Parser) Parse() (he_ast.BasicAST, error) {
 	          | cyberspaces
 	          ;
 	 */
-	asts := make([]he_ast.BasicAST, 0, 1)
+	heAsts := make([]asts.BasicAST, 0, 1)
 	for parser.pos < len(parser.tokens) {
 		pyForElse := true
 		for _, ep := range rootParsers {
 			savedPos := parser.pos
 			rel, err := ep(parser)
 			if err == nil {
-				asts = append(asts, rel)
+				heAsts = append(heAsts, rel)
 				pyForElse = false
 				break
 			} else if errors.Is(err, core.BadStatementException) {
@@ -77,10 +77,10 @@ func (parser *Parser) Parse() (he_ast.BasicAST, error) {
 	}
 
 	// Return the AST itself if there is only one.
-	if len(asts) != 1 {
-		return he_ast.NewListAST(asts), nil
+	if len(heAsts) != 1 {
+		return asts.NewListAST(heAsts), nil
 	}
-	return asts[0], nil
+	return heAsts[0], nil
 }
 
 func (parser *Parser) _expect(expectedKind int) (*core.TokenStruct, error) {
@@ -100,7 +100,7 @@ func (parser *Parser) _expect(expectedKind int) (*core.TokenStruct, error) {
 
 // == ast parser
 
-func _rootParseCyberspaces(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseCyberspaces(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// cyberspaces: CYBERSPACES SEMICOLON;
 
 	_, err := parser._expect(core.TokenKindCyberspaces)
@@ -109,17 +109,17 @@ func _rootParseCyberspaces(parser *Parser, args ...interface{}) (he_ast.BasicAST
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewCyberspacesAST(), nil
+	return asts.NewCyberspacesAST(), nil
 }
 
-func _rootParseSemicolon(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseSemicolon(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	_, err := parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewVoidAST(), nil
+	return asts.NewVoidAST(), nil
 }
 
-func _rootParseVarDef(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseVarDef(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// var_def: U8 IDENT ASSIGN expr SEMICOLON;
 
 	_, err := parser._expect(core.TokenKindU8)
@@ -137,10 +137,10 @@ func _rootParseVarDef(parser *Parser, args ...interface{}) (he_ast.BasicAST, err
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewVarDefAST(varIdent.Content, val), nil
+	return asts.NewVarDefAST(varIdent.Content, val), nil
 }
 
-func _rootParseVarDeclare(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseVarDeclare(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// var_declare: U8 IDENT SEMICOLON;
 	_, err := parser._expect(core.TokenKindU8)
 	if err != nil { return nil, err }
@@ -150,10 +150,10 @@ func _rootParseVarDeclare(parser *Parser, args ...interface{}) (he_ast.BasicAST,
 
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
-	return he_ast.NewVarDefAST(varIdent.Content, he_ast.NewVoidAST()), nil
+	return asts.NewVarDefAST(varIdent.Content, asts.NewVoidAST()), nil
 }
 
-func _rootParseVarAssign(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseVarAssign(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// var_assign: IDENT ASSIGN expr SEMICOLON;
 
 	varIdent, err := parser._expect(core.TokenKindIdent)
@@ -168,10 +168,10 @@ func _rootParseVarAssign(parser *Parser, args ...interface{}) (he_ast.BasicAST, 
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewVarDefAST(varIdent.Content, val), nil
+	return asts.NewVarDefAST(varIdent.Content, val), nil
 }
 
-func _rootParsePrint(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParsePrint(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// print: PRINT expr SEMICOLON;
 
 	_, err := parser._expect(core.TokenKindPrint)
@@ -183,10 +183,10 @@ func _rootParsePrint(parser *Parser, args ...interface{}) (he_ast.BasicAST, erro
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewPrintAST(expr), nil
+	return asts.NewPrintAST(expr), nil
 }
 
-func _rootParseSprint(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseSprint(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// print: SPRINT expr SEMICOLON;
 
 	_, err := parser._expect(core.TokenKindSprint)
@@ -197,10 +197,10 @@ func _rootParseSprint(parser *Parser, args ...interface{}) (he_ast.BasicAST, err
 
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
-	return he_ast.NewSprintAST(expr), nil
+	return asts.NewSprintAST(expr), nil
 }
 
-func _rootParseVarIncrement(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseVarIncrement(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// var_increment: IDENT INCREMENT SEMICOLON;
 
 	ident, err := parser._expect(core.TokenKindIdent)
@@ -212,10 +212,10 @@ func _rootParseVarIncrement(parser *Parser, args ...interface{}) (he_ast.BasicAS
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewVarIncrementAST(ident.Content), nil
+	return asts.NewVarIncrementAST(ident.Content), nil
 }
 
-func _rootParseTest5g(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseTest5g(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	/*
 		test_5g: TEST_5G SEMICOLON;
 	*/
@@ -224,10 +224,10 @@ func _rootParseTest5g(parser *Parser, args ...interface{}) (he_ast.BasicAST, err
 
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
-	return he_ast.NewTest5GAST(), nil
+	return asts.NewTest5GAST(), nil
 }
 
-func _parseU8CommonParts(parser *Parser, args ...interface{}) ([]he_ast.BasicAST, error) {
+func _parseU8CommonParts(parser *Parser, args ...interface{}) ([]asts.BasicAST, error) {
 	listExpr, err := _rootParseExpr(parser, true)
 	if err != nil { return nil, err }
 
@@ -240,10 +240,10 @@ func _parseU8CommonParts(parser *Parser, args ...interface{}) ([]he_ast.BasicAST
 	_, err = parser._expect(core.TokenKindRS)
 	if err != nil { return nil, err }
 
-	return []he_ast.BasicAST {listExpr, subscriptExpr}, nil
+	return []asts.BasicAST {listExpr, subscriptExpr}, nil
 }
 
-func _rootParseU8Set(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseU8Set(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	/*
 	    u8_set: expr LS expr RS ASSIGN expr SEMICOLON;
 	*/
@@ -259,10 +259,10 @@ func _rootParseU8Set(parser *Parser, args ...interface{}) (he_ast.BasicAST, erro
 	_, err = parser._expect(core.TokenKindSemicolon)
 	if err != nil { return nil, err }
 
-	return he_ast.NewU8SetAST(expr[0], expr[1], val), nil
+	return asts.NewU8SetAST(expr[0], expr[1], val), nil
 }
 
-func _rootParseExpr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _rootParseExpr(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	/*
 	   expr
 	      : empty_u8_expr
@@ -300,7 +300,7 @@ func _rootParseExpr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error
 	return nil, fmt.Errorf("%w: cannot parse expressions", core.BadStatementException)
 }
 
-func _parseEmptyU8Expr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _parseEmptyU8Expr(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	// empty_u8_expr: LS NUMBER RS;
 	_, err := parser._expect(core.TokenKindLS)
 	if err != nil { return nil, err }
@@ -314,10 +314,10 @@ func _parseEmptyU8Expr(parser *Parser, args ...interface{}) (he_ast.BasicAST, er
 	aLen, err := strconv.ParseInt(length.Content, 10, 32)
 	if err != nil { return nil, err }
 
-	return he_ast.NewEmptyU8InitAST(int(aLen)), nil
+	return asts.NewEmptyU8InitAST(int(aLen)), nil
 }
 
-func _parseOrU8Expr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _parseOrU8Expr(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	/*
 	    or_u8_expr
             : NUMBER
@@ -333,32 +333,32 @@ func _parseOrU8Expr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error
 	_, err = parser._expect(core.TokenKindOr)
 	if err != nil {
 		if errors.Is(err, core.BadStatementException) {
-			return he_ast.NewOrU8InitAST(int(firstVal), nil), nil
+			return asts.NewOrU8InitAST(int(firstVal), nil), nil
 		}
 		return nil, err
 	}
 	second, err := _parseOrU8Expr(parser)
 	if err != nil { return nil, err }
 
-	return he_ast.NewOrU8InitAST(int(firstVal), second.(*he_ast.OrU8InitAST)), nil
+	return asts.NewOrU8InitAST(int(firstVal), second.(*asts.OrU8InitAST)), nil
 }
 
-func _parseVarExpr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _parseVarExpr(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	/*
 		var_expr: IDENT;
 	*/
 	ident, err := parser._expect(core.TokenKindIdent)
 	if err != nil { return nil, err }
 
-	return he_ast.NewVarExprAST(ident.Content), nil
+	return asts.NewVarExprAST(ident.Content), nil
 }
 
-func _parseU8GetExpr(parser *Parser, args ...interface{}) (he_ast.BasicAST, error) {
+func _parseU8GetExpr(parser *Parser, args ...interface{}) (asts.BasicAST, error) {
 	/*
 		u8_get_expr: expr LS expr RS
 	*/
 	expr, err := _parseU8CommonParts(parser)
 	if err != nil { return nil, err }
 
-	return he_ast.NewU8GetAST(expr[0], expr[1]), nil
+	return asts.NewU8GetAST(expr[0], expr[1]), nil
 }

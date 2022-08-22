@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 	"helang-go/helang"
 	"helang-go/helang/core"
 	"log"
@@ -27,6 +28,6 @@ func main() {
 	env := map[string]*core.U8{}
 	_, err = ast.Evaluate(env)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Errorf("%w: %s", core.HeLangException, err.Error()))
 	}
 }

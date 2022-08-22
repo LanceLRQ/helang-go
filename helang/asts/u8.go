@@ -1,4 +1,4 @@
-package he_ast
+package asts
 
 import (
 	"helang-go/helang/core"
