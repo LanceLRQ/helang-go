@@ -71,7 +71,7 @@ func (parser *Parser) Parse() (asts.BasicAST, error) {
 				"%w: failed to parse tokens started from %d, which is %s",
 				core.BadStatementException,
 				parser.pos,
-				parser.tokens[parser.pos].ToString(),
+				parser.tokens[parser.pos].String(),
 			)
 		}
 	}

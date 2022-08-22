@@ -64,6 +64,6 @@ func (token *TokenStruct) Equal (other *TokenStruct) bool {
 	return token.Content == other.Content && token.Kind == other.Kind
 }
 
-func (token *TokenStruct) ToString () string {
+func (token *TokenStruct) String () string {
 	return fmt.Sprintf("Token<%s,%d>", token.Content, token.Kind)
 }

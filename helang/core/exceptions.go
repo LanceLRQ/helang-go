@@ -10,7 +10,7 @@ var BadStatementException = errors.New("BadStatementException")
 
 var CyberNameException = errors.New("CyberNameException")
 
-var CyberSubtractionException = errors.New("CyberSubtractionException")
+var CyberArithmeticException = errors.New("CyberArithmeticException")
 
 var CyberGrammarException = errors.New("CyberLexerException")
 

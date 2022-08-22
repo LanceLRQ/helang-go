@@ -27,7 +27,7 @@ func NewU8Array (val []int) *U8 {
 	}
 }
 
-func (u8 *U8) ToString () string {
+func (u8 *U8) String () string {
 	outputStr := make([]string, 0, 10)
 	for _, v := range u8.Value {
 		outputStr = append(outputStr, strconv.Itoa(v))
@@ -36,7 +36,7 @@ func (u8 *U8) ToString () string {
 }
 
 func (u8 *U8) Equal (other *U8) bool {
-	return other.ToString() == u8.ToString()
+	return other.String() == u8.String()
 }
 
 func (u8 *U8) EqualIntArray (other []int) bool {
@@ -62,14 +62,16 @@ func (u8 *U8) Sub(other *U8) (*U8, error) {
 	if len(other.Value) == 1 || len(other.Value) == len(u8.Value) {
 		// Normal subtraction && Vector subtraction.
 		arr := make([]int, 0, 1)
-		for _, ov := range other.Value {
-			for _, v := range u8.Value {
-				arr = append(arr, v - ov)
+		for i, ov := range other.Value {
+			for j, v := range u8.Value {
+				if i == j || len(other.Value) == 1 {
+					arr = append(arr, v-ov)
+				}
 			}
 		}
 		return NewU8Array(arr), nil
 	}
-	return NewU8Empty(), fmt.Errorf("%w: illegal subtraction: %s - %s", CyberSubtractionException, u8.ToString(), other.ToString())
+	return NewU8Empty(), fmt.Errorf("%w: illegal subtraction: %s - %s", CyberArithmeticException, u8.String(), other.String())
 }
 
 

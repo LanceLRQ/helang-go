@@ -23,7 +23,7 @@ func (ast *PrintAST) Evaluate(env map[string]*core.U8) (*core.U8, error) {
 	if err != nil {
 		return core.NewU8Empty(), err
 	}
-	fmt.Println(val.ToString())
+	fmt.Println(val.String())
 	return val, nil
 }
 
