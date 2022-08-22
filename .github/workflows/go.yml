@@ -22,14 +22,14 @@ jobs:
         go get -v -t -d ./...
         
     - name: Build (linux_amd64)
-      run: GOOS=linux GOARCH=amd64 go build -o he ./helang.go -v ./...
+      run: GOOS=linux GOARCH=amd64 go build -o he ./helang.go -v
 
     - name: Pack (linux_amd64)
       run: |
         zip -r helang-linux-amd64.zip he README.md LICENSE
 
     - name: Build (drawin_amd64)
-      run: GOOS=darwin GOARCH=amd64  go build -o he ./helang.go -v ./...
+      run: GOOS=darwin GOARCH=amd64  go build -o he ./helang.go
     
     - name: Pack (drawin_amd64)
       run: |
